@@ -1,6 +1,8 @@
-package main
+package algorithms
 
-func bfs(startRow, startCol, targetRow, targetCol int) []int{
+import rl "github.com/gen2brain/raylib-go/raylib"
+
+func Bfs(startRow, startCol, targetRow, targetCol, rows, columns int, segmentPos []rl.Vector2, cellSize int) []int{
 
 	var directions = [][]int{
 		{0, 1},  // Right : 0
@@ -12,6 +14,10 @@ func bfs(startRow, startCol, targetRow, targetCol int) []int{
 	var visited = make([][]bool, rows)
 	for i := range visited{
 		visited[i] = make([]bool, columns)
+	}
+
+	for _, segmentCoord := range segmentPos{
+		visited[int(segmentCoord.Y)/cellSize][int(segmentCoord.X)/ cellSize] = true
 	}
 
 	type node struct{

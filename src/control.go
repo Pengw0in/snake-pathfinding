@@ -1,15 +1,20 @@
 package main
 
 func control(instruction int){
+	
+	for i := len(snake_1.segments) -  1; i > 0; i--{
+		snake_1.segments[i] = snake_1.segments[i-1]
+	}
+
 	switch instruction {
 		case 0:
-			snake.X += cellHeight
+			snake_1.segments[0].X += cellHeight
 		case 2:
-			snake.X -= cellHeight
+			snake_1.segments[0].X -= cellHeight
 		case 1:
-			snake.Y += cellHeight
+			snake_1.segments[0].Y += cellHeight
 		case 3:
-			snake.Y -= cellHeight
+			snake_1.segments[0].Y -= cellHeight
 	}
 	moveTime = 0.0 // Reset to Zero
 

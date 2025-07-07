@@ -4,14 +4,12 @@ A Snake game where the snake automatically finds its path to food using pathFind
 
 ## Project Details
 - **Created:** July 2025
-- **Hours Worked:** 7 hours
 - **Language:** GoLang
 - **Graphics Library:** Raylib-go
 
-
 ## TODO
-- [ ] Add pause/resume functionality
-- [ ] Add snake body growth mechanics
+- [x] Add pause/resume functionality
+- [X] Add snake body growth mechanics
 - [ ] Add obstacle/wall generation
 - [ ] Implement more algorithms
 - [ ] Add algorithm comparison
