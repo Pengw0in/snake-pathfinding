@@ -1,8 +1,9 @@
 package algorithms
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+// import rl "github.com/gen2brain/raylib-go/raylib"
 
-func Bfs(startRow, startCol, targetRow, targetCol, rows, columns int, segmentPos []rl.Vector2, cellSize int) []int{
+func Bfs(startRow, startCol, targetRow, targetCol, rows, columns int, snakeGrid [][]int) []int{
+	
 
 	var directions = [][]int{
 		{0, 1},  // Right : 0
@@ -16,8 +17,8 @@ func Bfs(startRow, startCol, targetRow, targetCol, rows, columns int, segmentPos
 		visited[i] = make([]bool, columns)
 	}
 
-	for _, segmentCoord := range segmentPos{
-		visited[int(segmentCoord.Y)/cellSize][int(segmentCoord.X)/ cellSize] = true
+	for _, gridCoord := range snakeGrid{
+		visited[gridCoord[1]][gridCoord[0]] = true
 	}
 
 	type node struct{
@@ -52,5 +53,5 @@ func Bfs(startRow, startCol, targetRow, targetCol, rows, columns int, segmentPos
 		}
 			
 	}
-	return nil
+	return []int{-1}
 }
