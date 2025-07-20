@@ -133,15 +133,19 @@ func drawGame() {
 
     // UI elements
     if pause && !gameOver{
-		pauseText := UIText{"GAME PAUSED", 40, -40, rl.Gray}
-		pauseText.draw()
+        pauseText := UIText{"GAME PAUSED", 40, 60, rl.Gray}
+        pauseText.draw()
+        
+        // Add instruction text below
+        instructionText := UIText{"Press P to Resume", 20, 20, rl.LightGray}
+        instructionText.draw()
     }
 
     if gameOver {
 		gameOverTexts := []UIText{
-			{"GAMEOVER", 40, -40, rl.Gray},
-            {"ALGORITHM EXHAUSTED", 20, 0, rl.Red},
-            {"R TO RESTART", 15, 22, rl.Maroon},
+            {"GAME OVER", 50, 80, rl.Red},
+            {"Algorithm could not find path", 24, 30, rl.Maroon},
+            {"Press R to Restart", 18, -30, rl.Gray},
 		}
 
 		for _, text := range gameOverTexts{
