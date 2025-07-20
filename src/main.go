@@ -1,12 +1,8 @@
-/*
-Author: Pengw0in
-Date  : 07-07-2025
-*/
-
+// Package main implements an automated Snake game where pathfinding algorithms 
+// control snake movement to find food.
 package main
 
 import (
-    // "strconv"
     rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -14,8 +10,8 @@ import (
 // Global Constants Declaration
 // ------------------------------------------------------------------------------------
 
-const screenWidth = 1600
-const screenHeight = 900
+const screenWidth = 800
+const screenHeight = 800
 
 const cellWidth = 25
 const cellHeight = 25
@@ -40,6 +36,12 @@ type food struct {
     size     rl.Vector2
     color    rl.Color
 }
+type UIText struct{
+	text 	 string
+	fontSize int32
+	yOffset  int32
+	color    rl.Color
+}
 
 type coordinates struct {
     X, Y int
@@ -49,33 +51,44 @@ type coordinates struct {
 // Global Variables Declaration
 // ------------------------------------------------------------------------------------
 
-var moveTime = float32(0.0)
-var instructionSet []int
-var score uint16
+var score    uint16
+var pause    bool
+var gameOver bool 
 
-var snake_1 = snake{
-    []rl.Vector2{{X: 0, Y: 0}},
-    rl.Vector2{X: cellWidth, Y: cellHeight},
-    rl.Blue,
-}
+var moveTime       float32
+var instructionSet []int
 
 var prevHeadPos rl.Vector2
 
-var fruit = food{
-    foodSpawn(),
-    rl.Vector2{X: cellWidth, Y: cellHeight},
-    rl.SkyBlue,
-}
+var snake_1 snake
+var fruit food
 
-var pause bool = false
-var gameOver bool = false
 
 // ------------------------------------------------------------------------------------
 // Entry Point
 // ------------------------------------------------------------------------------------
 
+func init() {
+	score = 0
+	pause = false
+	gameOver = false
+    moveTime = float32(0.0)
+
+    snake_1 = snake{
+        segments: []rl.Vector2{{X: 0, Y: 0}},
+        size:     rl.Vector2{X: cellWidth, Y: cellHeight},
+        color:    rl.Blue,
+    }
+
+    fruit = food{
+		position: foodSpawn(),
+		size:     rl.Vector2{X: cellWidth, Y: cellHeight},
+		color:    rl.Red,
+	}
+}
+
 func main() {
-    rl.InitWindow(screenWidth, screenHeight, "BFS operated Snake")
+    rl.InitWindow(screenWidth, screenHeight, "Snake Game")
     defer rl.CloseWindow()
     rl.SetTargetFPS(60)
 

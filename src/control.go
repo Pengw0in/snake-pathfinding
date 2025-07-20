@@ -1,8 +1,9 @@
 package main
 
+// make this modular enough
 func control(instruction int){
 	
-	for i := len(snake_1.segments) -  1; i > 0; i--{
+	for i := len(snake_1.segments) -  1; i > 0; i-- {
 		snake_1.segments[i] = snake_1.segments[i-1]
 	}
 

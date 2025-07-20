@@ -5,10 +5,7 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-// Example Vector2 and snake, adjust if different
-// type Vector2 struct{ X, Y float32 }
-// var snake_1 = snake{segments: []rl.Vector2{...}}
-
+// TODO: Make this modular
 func foodSpawn() rl.Vector2 {
 	for {
 		randRow := rand.Intn(rows)

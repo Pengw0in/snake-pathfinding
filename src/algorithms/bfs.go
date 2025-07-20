@@ -1,7 +1,9 @@
+// Package algorithms provides pathfinding implementations for the Snake game.
 package algorithms
 
-// import rl "github.com/gen2brain/raylib-go/raylib"
-
+// Bfs implements breadth-first search pathfinding algorithm.
+// Returns a sequence of moves (0=Right, 1=Down, 2=Left, 3=Up) to reach the target,
+// or [-1] if no path exists.
 func Bfs(startRow, startCol, targetRow, targetCol, rows, columns int, snakeGrid [][]int) []int{
 	
 

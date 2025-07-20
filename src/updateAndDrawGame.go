@@ -6,22 +6,66 @@ import (
 )
 
 // ------------------------------------------------------------------------------------
-// Game Update Logic
+// Main Game Logic
 // ------------------------------------------------------------------------------------
+
+func (ui UIText) draw() {
+	textWidth := rl.MeasureText(ui.text, ui.fontSize)
+	x := screenWidth/2 - textWidth/2
+	y := screenHeight/2 - ui.yOffset
+	rl.DrawText(ui.text, x, y, ui.fontSize, ui.color)
+}
+
+func drawGrid() {
+    for row := range rows {      
+        for column := range columns {
+            rl.DrawRectangleLines(
+                int32(column * cellWidth), int32(row * cellHeight),
+                int32(cellWidth), int32(cellHeight),
+                rl.LightGray,
+            )
+        }
+    }
+}
+
+func drawSnake() {
+    for i := range snake_1.segments {
+        if i == 0 {
+            rl.DrawRectangleV(snake_1.segments[i], snake_1.size, rl.DarkBlue)
+        } else {
+            rl.DrawRectangleV(snake_1.segments[i], snake_1.size, snake_1.color)
+        }
+    }
+
+}
+
+func reset() {
+    snake_1.segments = []rl.Vector2{{X: 0, Y: 0}} // reset segments
+    score = 0
+    instructionSet =[]int{}
+    moveTime = 0.0
+    fruit.position = foodSpawn()
+    gameOver = false   
+}
+
+func collisionCheck() {
+    if snake_1.segments[0] == fruit.position {
+        fruit.position = foodSpawn()
+
+        score = score + 1
+        snake_1.segments = append(snake_1.segments, prevHeadPos) // Add new segment
+
+        instructionSet = []int{}
+    }
+}
 
 func updateGame() {
     if rl.IsKeyPressed('P') {
-        pause = false
+        pause = !pause
     }
 
     if rl.IsKeyPressed('R') && gameOver {
-        snake_1.segments = []rl.Vector2{{X: 0, Y: 0}} // reset segments
-
-        score = 0
-        instructionSet =[]int{}
-        moveTime = 0.0
-        fruit.position = foodSpawn()
-        gameOver = false
+        reset()
     }
 
     if !gameOver {
@@ -36,17 +80,22 @@ func updateGame() {
                     }
                     snakeGrid = append(snakeGrid, gridCoord)
                 }
-
                 fruitGrid := coordinates{
                     int(fruit.position.X / cellWidth),
                     int(fruit.position.Y / cellHeight),
                 }
 
-                instructionSet = algo.Bfs(snakeGrid[0][1], snakeGrid[0][0], fruitGrid.Y, fruitGrid.X, rows, columns, snakeGrid)
+                instructionSet = algo.Bfs(
+                    snakeGrid[0][1], snakeGrid[0][0], 
+                    fruitGrid.Y, fruitGrid.X, 
+                    rows, columns, 
+                    snakeGrid,
+                )
             }
 
             deltaTime := rl.GetFrameTime() // Time since last Frame
             moveTime += deltaTime
+
             prevHeadPos = snake_1.segments[0] // Can this be improved?
 
             // Process one instruction per one loop
@@ -60,14 +109,7 @@ func updateGame() {
             }
 
             // Collision logic
-            if snake_1.segments[0] == fruit.position {
-                fruit.position = foodSpawn()
-
-                score = score + 1
-                snake_1.segments = append(snake_1.segments, prevHeadPos) // Add new segment
-
-                instructionSet = []int{} // Clear instructions to recalculate path
-            }
+            collisionCheck()
         }
     }
 }
@@ -81,39 +123,30 @@ func drawGame() {
     rl.ClearBackground(rl.RayWhite)
 
     // Draw grid
-    for i := range rows {      // i ==> --
-        for j := range columns { // j ==> |
-            rl.DrawRectangleLines(
-                int32(j*cellWidth), int32(i*cellHeight),
-                int32(cellWidth), int32(cellHeight),
-                rl.LightGray,
-            )
-
-            // cellCoordinates(
-            // 	strconv.Itoa(j),
-            // 	strconv.Itoa(i),
-            // 	int32(j*cellWidth),
-            // 	int32(i*cellHeight),
-            // )
-        }
-    }
+    drawGrid()
 
     // Draw snake
-    for i := range snake_1.segments {
-        rl.DrawRectangleV(snake_1.segments[i], snake_1.size, snake_1.color)
-    }
+    drawSnake()
 
     // Draw fruit
     rl.DrawRectangleV(fruit.position, fruit.size, fruit.color)
 
     // UI elements
     if pause && !gameOver{
-        rl.DrawText("GAME PAUSED", screenWidth/2-rl.MeasureText("GAME PAUSED", 40)/2, screenHeight/2-40, 40, rl.Gray)
+		pauseText := UIText{"GAME PAUSED", 40, -40, rl.Gray}
+		pauseText.draw()
     }
 
     if gameOver {
-        rl.DrawText("GAME OVER", screenWidth/2-rl.MeasureText("GAME OVER", 40)/2, screenHeight/2-40, 40, rl.Gray)
-        rl.DrawText("ALGORITHM EXHAUSTED", screenWidth/2-rl.MeasureText("ALGORITHM EXHAUSTED", 20)/2, screenHeight/2+25, 20, rl.Red)
+		gameOverTexts := []UIText{
+			{"GAMEOVER", 40, -40, rl.Gray},
+            {"ALGORITHM EXHAUSTED", 20, 0, rl.Red},
+            {"R TO RESTART", 15, 22, rl.Maroon},
+		}
+
+		for _, text := range gameOverTexts{
+			text.draw()
+		}
     }
 
     rl.EndDrawing()

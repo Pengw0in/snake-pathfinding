@@ -1,5 +1,7 @@
 package main
 
+// just a helper file
+
 import (
 	rl "github.com/gen2brain/raylib-go/raylib" )
 
